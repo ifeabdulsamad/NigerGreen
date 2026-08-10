@@ -3,7 +3,6 @@ __pycache__/
 *.db
 *.db-wal
 *.db-shm
-.env
 .streamlit/secrets.toml
 data/uploads/*
 !data/uploads/.gitkeep
@@ -13,3 +12,5 @@ htmlcov/
 .venv/
 venv/
 .DS_Store
+config.bat
+node_modules
