@@ -1,0 +1,259 @@
+=== DIRECTORY TREE ===
+
+
+=== ENTRY POINTS ===
+
+
+=== ALL IMPORTS ===
+./app.py:6:from __future__ import annotations
+./app.py:8:import os
+./app.py:9:from pathlib import Path
+./app.py:11:import pandas as pd
+./app.py:12:import streamlit as st
+./app.py:13:import plotly.express as px
+./app.py:15:from config import Config, get_config
+./app.py:16:from logger import setup_logging
+./app.py:17:from database import DatabaseManager
+./app.py:18:from schema_registry import SchemaRegistry, CSVValidationError
+./app.py:19:from cache_manager import CacheManager
+./app.py:20:from sql_engine import TextToSQLEngine, EngineError
+./cache_manager.py:12:from __future__ import annotations
+./cache_manager.py:14:import threading
+./cache_manager.py:15:import time
+./cache_manager.py:16:from typing import Any, Dict, Optional
+./cache_manager.py:18:from cachetools import LRUCache, TTLCache
+./config.py:6:from __future__ import annotations
+./config.py:8:import logging
+./config.py:9:from functools import lru_cache
+./config.py:10:from pathlib import Path
+./config.py:11:from typing import Optional
+./config.py:13:from pydantic_settings import BaseSettings, SettingsConfigDict
+./database.py:9:from __future__ import annotations
+./database.py:11:import re
+./database.py:12:import sqlite3
+./database.py:13:import threading
+./database.py:14:import time
+./database.py:15:from pathlib import Path
+./database.py:16:from typing import Any, List, Optional, Tuple
+./database.py:18:import pandas as pd
+./database.py:19:import sqlparse
+./database.py:20:from sqlparse.sql import Identifier, IdentifierList
+./database.py:21:from sqlparse.tokens import Comment, Keyword, Name, Whitespace
+./logger.py:6:from __future__ import annotations
+./logger.py:8:import hashlib
+./logger.py:9:import logging
+./logger.py:10:import sys
+./logger.py:11:from typing import Optional
+./logger.py:13:import structlog
+./schema_registry.py:13:from __future__ import annotations
+./schema_registry.py:15:import hashlib
+./schema_registry.py:16:import json
+./schema_registry.py:17:import re
+./schema_registry.py:18:import shutil
+./schema_registry.py:19:import sqlite3
+./schema_registry.py:20:import unicodedata
+./schema_registry.py:21:from pathlib import Path
+./schema_registry.py:22:from typing import Any, Dict, List, Optional, Tuple
+./schema_registry.py:24:import chardet
+./schema_registry.py:25:import pandas as pd
+./schema_registry.py:27:from database import DatabaseManager
+./sql_engine.py:20:from __future__ import annotations
+./sql_engine.py:22:import hashlib
+./sql_engine.py:23:import random
+./sql_engine.py:24:import re
+./sql_engine.py:25:import sqlite3
+./sql_engine.py:26:import time
+./sql_engine.py:27:import unicodedata
+./sql_engine.py:28:from pathlib import Path
+./sql_engine.py:29:from typing import Any, Dict, List, Optional, Tuple
+./sql_engine.py:31:import pandas as pd
+./tests/conftest.py:2:from __future__ import annotations
+./tests/conftest.py:4:from pathlib import Path
+./tests/conftest.py:6:import pytest
+./tests/conftest.py:8:from config import Config
+./tests/conftest.py:9:from database import DatabaseManager
+./tests/conftest.py:10:from cache_manager import CacheManager
+./tests/conftest.py:11:from schema_registry import SchemaRegistry
+./tests/conftest.py:12:from sql_engine import TextToSQLEngine
+./tests/test_caching.py:2:from __future__ import annotations
+./tests/test_caching.py:4:import time
+./tests/test_caching.py:6:from cache_manager import CacheManager
+./tests/test_database.py:2:from __future__ import annotations
+./tests/test_database.py:4:import pandas as pd
+./tests/test_database.py:5:import pytest
+./tests/test_database.py:6:from hypothesis import HealthCheck, given, settings, strategies as st
+./tests/test_database.py:8:from database import DatabaseManager, SQLValidationError
+./tests/test_schema_registry.py:2:from __future__ import annotations
+./tests/test_schema_registry.py:4:import pytest
+./tests/test_schema_registry.py:6:from schema_registry import CSVValidationError
+./tests/test_schema_registry.py:7:from tests.conftest import FIXTURES
+./tests/test_sql_engine.py:2:from __future__ import annotations
+./tests/test_sql_engine.py:4:import pandas as pd
+./tests/test_sql_engine.py:5:import pytest
+./tests/test_sql_engine.py:7:from sql_engine import InputValidationError, SchemaSelectionError
+./tests/test_sql_engine.py:8:from tests.conftest import FIXTURES
+
+
+=== CLASSES & FUNCTIONS ===
+./app.py:32:def init_backend() -> dict:
+./cache_manager.py:21:class CacheManager:
+./cache_manager.py:24:    def __init__(
+./cache_manager.py:44:    def _get(self, store: str, key: str) -> Optional[Any]:
+./cache_manager.py:68:    def _set(self, store: str, key: str, value: Any) -> None:
+./cache_manager.py:82:    def get_schema_selection(self, question: str, candidates_hash: str) -> Optional[str]:
+./cache_manager.py:85:    def set_schema_selection(self, question: str, candidates_hash: str, table_name: str) -> None:
+./cache_manager.py:88:    def get_sql(self, question: str, schema_version: str) -> Optional[str]:
+./cache_manager.py:91:    def set_sql(self, question: str, schema_version: str, sql: str) -> None:
+./cache_manager.py:94:    def get_result(self, sql: str, table_name: str, result_hash: str) -> Optional[Any]:
+./cache_manager.py:97:    def set_result(self, sql: str, table_name: str, result_hash: str, value: Any) -> None:
+./cache_manager.py:100:    def get_schema_doc(self, table_id: str, version: int) -> Optional[str]:
+./cache_manager.py:103:    def set_schema_doc(self, table_id: str, version: int, doc: str) -> None:
+./cache_manager.py:107:    def invalidate_table(self, table_id: str) -> None:
+./cache_manager.py:111:            def mentions(key: object) -> bool:
+./cache_manager.py:122:    def clear(self) -> None:
+./cache_manager.py:129:    def stats(self) -> Dict[str, Dict[str, int]]:
+./cache_manager.py:136:    def cache_hit_ratio(self) -> float:
+./config.py:18:class Config(BaseSettings):
+./config.py:61:    def resolved_upload_dir(self) -> Path:
+./config.py:72:    def resolved_data_dir(self) -> Path:
+./config.py:77:    def validate_config(self) -> None:
+./config.py:91:    def masked_key(self) -> str:
+./config.py:100:def get_config() -> Config:
+./database.py:32:class SQLValidationError(ValueError):
+./database.py:53:class DatabaseManager:
+./database.py:56:    def __init__(
+./database.py:83:    def _progress_check(self) -> int:
+./database.py:93:    def create_table_from_df(
+./database.py:101:    def list_tables(self) -> List[str]:
+./database.py:109:    def get_table_preview(self, table_name: str, n: int = 5) -> pd.DataFrame:
+./database.py:115:    def table_row_count(self, table_name: str) -> int:
+./database.py:122:    def vacuum(self) -> None:
+./database.py:126:    def execute_raw(self, sql: str, params: Tuple[Any, ...] = ()) -> None:
+./database.py:136:    def _skippable(tok: Any) -> bool:
+./database.py:144:    def _extract_table_names(parsed: Any) -> set:
+./database.py:153:        def table_of(ident: Any) -> str:
+./database.py:186:    def validate_sql(self, sql: str, allowed_table: str) -> Tuple[bool, str]:
+./database.py:238:    def execute_query(
+./database.py:278:    def close(self) -> None:
+./logger.py:16:def setup_logging(level: str = "INFO", json: bool = True) -> None:
+./logger.py:46:def get_logger(name: str = "naijagreen"):
+./logger.py:50:def _digest(text: str) -> str:
+./logger.py:55:def question_hash(question: str) -> str:
+./logger.py:59:def sql_hash(sql: str) -> str:
+./schema_registry.py:70:class CSVValidationError(ValueError):
+./schema_registry.py:74:class SchemaRegistry:
+./schema_registry.py:75:    def __init__(self, db: DatabaseManager, data_dir: str = "data") -> None:
+./schema_registry.py:84:    def _ensure_registry_table(self) -> None:
+./schema_registry.py:92:    def validate_csv(self, file_path: str) -> Tuple[bool, str]:
+./schema_registry.py:132:    def _looks_numeric(value: Any) -> bool:
+./schema_registry.py:141:    def _read_csv(self, path: Path) -> Tuple[pd.DataFrame, str]:
+./schema_registry.py:156:    def infer_schema(self, csv_path: str, table_id: Optional[str] = None) -> Dict[str, Any]:
+./schema_registry.py:197:    def _describe_column(name: str) -> str:
+./schema_registry.py:202:    def _extract_units(name: str) -> Optional[str]:
+./schema_registry.py:210:    def _checksum(path: Path) -> str:
+./schema_registry.py:217:    def _thematic_tags(
+./schema_registry.py:230:    def _sanitize_table_name(self, filename: str, table_id: str) -> str:
+./schema_registry.py:246:    def register_csv(
+./schema_registry.py:298:    def _next_table_id(self) -> str:
+./schema_registry.py:303:    def update_csv(self, table_id: str, new_csv_path: str) -> str:
+./schema_registry.py:338:    def delete_schema(self, table_id: str) -> bool:
+./schema_registry.py:357:    def list_tables(self) -> List[str]:
+./schema_registry.py:361:    def get_meta(self, table_id: str) -> Optional[Dict[str, Any]]:
+./schema_registry.py:369:    def get_all_schemas(self) -> List[Tuple[str, str, str, List[str]]]:
+./schema_registry.py:388:    def get_schema_doc(self, table_id: str, version: Optional[int] = None) -> str:
+./schema_registry.py:399:    def get_table_name(self, table_id: str) -> str:
+./schema_registry.py:408:    def _build_doc(self, table_id: str, table_name: str, info: Dict[str, Any]) -> str:
+./schema_registry.py:441:    def _tokenize(text: str) -> List[str]:
+./schema_registry.py:444:    def search_schemas(self, query: str, top_k: int = 5) -> List[Tuple[str, float]]:
+./schema_registry.py:461:        def vectorize(text: str) -> Dict[str, float]:
+./schema_registry.py:488:    def stats(self) -> Dict[str, Any]:
+./sql_engine.py:36:    def get_logger(_n="naijagreen"):  # type: ignore[misc]
+./sql_engine.py:39:    def question_hash(q):  # type: ignore[misc]
+./sql_engine.py:42:    def sql_hash(s):  # type: ignore[misc]
+./sql_engine.py:49:class EngineError(Exception):
+./sql_engine.py:53:class NoAPIKeyError(EngineError):
+./sql_engine.py:57:class SchemaSelectionError(EngineError):
+./sql_engine.py:61:class SQLGenerationError(EngineError):
+./sql_engine.py:65:class UnsafeSQLError(EngineError):
+./sql_engine.py:69:class QueryExecutionError(EngineError):
+./sql_engine.py:73:class EmptyResultError(EngineError):
+./sql_engine.py:77:class LLMTimeoutError(EngineError):
+./sql_engine.py:81:class RateLimitError(EngineError):
+./sql_engine.py:85:class InputValidationError(EngineError):
+./sql_engine.py:90:def _demo_sql_for(question: str, table_name: str, columns: List[str]) -> Optional[str]:
+./sql_engine.py:131:class TextToSQLEngine:
+./sql_engine.py:134:    def __init__(
+./sql_engine.py:159:    def _load_prompts(self) -> None:
+./sql_engine.py:169:    def select_schema(
+./sql_engine.py:215:    def generate_sql(
+./sql_engine.py:244:    def execute_query(self, sql: str, table_name: str) -> pd.DataFrame:
+./sql_engine.py:257:    def answer_question(self, question: str) -> Dict[str, Any]:
+./sql_engine.py:305:    def _answer_question_inner(
+./sql_engine.py:349:    def _call_llm(
+./sql_engine.py:412:    def _demo_schema_answer(self, prompt: str) -> str:
+./sql_engine.py:420:    def _demo_sql_answer(self, prompt: str) -> str:
+./sql_engine.py:432:    def _demo_select(
+./sql_engine.py:447:    def _render(self, name: str, **kwargs: Any) -> str:
+./sql_engine.py:454:    def _fmt_candidates(candidates: List[Tuple[str, str, str, List[str]]]) -> str:
+./sql_engine.py:462:    def _clean_sql(sql: str) -> str:
+./sql_engine.py:470:    def _template_sql(self, question: str, table_name: str) -> str:
+./sql_engine.py:482:    def _validate_input(question: str) -> None:
+./sql_engine.py:491:    def _result_cache_key(
+./sql_engine.py:505:    def _summarize(self, question: str, df: pd.DataFrame, table_name: str) -> str:
+./sql_engine.py:540:    def _response(question: str, **over: Any) -> Dict[str, Any]:
+./sql_engine.py:555:    def _elapsed(start: float) -> float:
+./sql_engine.py:559:def json_loads(raw: str) -> Any:
+./tests/conftest.py:18:def tmp_db(tmp_path):
+./tests/conftest.py:25:def registry(tmp_db, tmp_path):
+./tests/conftest.py:30:def engine(tmp_db, registry, tmp_path):
+./tests/conftest.py:44:def demo_engine(tmp_db, registry, tmp_path):
+./tests/conftest.py:58:def emissions_engine(engine, tmp_path):
+./tests/conftest.py:63:    def fake_call(prompt, stage, relax_on_error=False):
+./tests/test_caching.py:9:def test_schema_selection_roundtrip():
+./tests/test_caching.py:16:def test_ttl_expiry():
+./tests/test_caching.py:24:def test_result_ttl_on_access():
+./tests/test_caching.py:32:def test_lru_eviction():
+./tests/test_caching.py:41:def test_invalidate_table_clears_related_entries():
+./tests/test_caching.py:57:def test_disabled_cache_stores_nothing():
+./tests/test_caching.py:63:def test_hit_ratio_tracks():
+./tests/test_database.py:13:def test_create_table_and_list(tmp_db):
+./tests/test_database.py:23:def test_vacuum_runs(tmp_db):
+./tests/test_database.py:31:def test_valid_select_passes(tmp_db):
+./tests/test_database.py:39:def test_aliased_and_quoted_table_passes(tmp_db):
+./tests/test_database.py:46:def test_subquery_and_cte_pass(tmp_db):
+./tests/test_database.py:60:def test_wrong_table_rejected(tmp_db):
+./tests/test_database.py:68:def test_cross_table_join_rejected(tmp_db):
+./tests/test_database.py:91:def test_dangerous_sql_rejected(tmp_db, sql):
+./tests/test_database.py:96:def test_execute_query_rejects_dml(tmp_db):
+./tests/test_database.py:104:def test_execute_query_returns_dataframe(tmp_db):
+./tests/test_database.py:112:def test_execute_query_timeout_wrapper(tmp_db):
+./tests/test_database.py:137:def test_fuzz_dangerous_fragments_never_validate(tmp_db, fragments, filler):
+./tests/test_database.py:151:def test_semicolon_injection_rejected(tmp_db, sql):
+./tests/test_database.py:162:def test_fuzz_benign_selects_validate(tmp_db, filler):
+./tests/test_schema_registry.py:10:def test_register_csv_happy_path(registry):
+./tests/test_schema_registry.py:23:def test_schema_doc_mentions_columns_and_notes(registry):
+./tests/test_schema_registry.py:30:def test_update_csv_bumps_version(registry):
+./tests/test_schema_registry.py:39:def test_register_second_table_gets_next_id(registry):
+./tests/test_schema_registry.py:45:def test_delete_schema(registry):
+./tests/test_schema_registry.py:52:def test_validate_csv_rejects_bad_files(registry):
+./tests/test_schema_registry.py:57:def test_validate_csv_rejects_wrong_extension(registry, tmp_path):
+./tests/test_schema_registry.py:64:def test_register_rejects_invalid_csv(registry):
+./tests/test_schema_registry.py:69:def test_latin1_csv_is_detected(registry):
+./tests/test_schema_registry.py:77:def test_duplicate_columns_rejected(registry, tmp_path):
+./tests/test_schema_registry.py:84:def test_search_schemas_ranks_emissions_for_co2(registry):
+./tests/test_schema_registry.py:93:def test_search_returns_nothing_without_tables(registry):
+./tests/test_sql_engine.py:11:def test_end_to_end_with_mocked_llm(emissions_engine):
+./tests/test_sql_engine.py:25:def test_result_caching_second_call_hits(emissions_engine):
+./tests/test_sql_engine.py:30:    def counting(prompt, stage, relax_on_error=False):
+./tests/test_sql_engine.py:40:def test_unsafe_sql_returns_e004(emissions_engine):
+./tests/test_sql_engine.py:41:    def evil(prompt, stage, relax_on_error=False):
+./tests/test_sql_engine.py:52:def test_cannot_answer_returns_e002(emissions_engine):
+./tests/test_sql_engine.py:53:    def refuses(prompt, stage, relax_on_error=False):
+./tests/test_sql_engine.py:64:def test_question_too_long_rejected(emissions_engine):
+./tests/test_sql_engine.py:69:def test_empty_question_rejected(emissions_engine):
+./tests/test_sql_engine.py:74:def test_no_datasets_returns_clean_error(engine):
+./tests/test_sql_engine.py:83:def demo_with_data(demo_engine):
+./tests/test_sql_engine.py:89:def test_demo_mode_answers_total_per_year(demo_with_data):
+./tests/test_sql_engine.py:98:def test_demo_mode_answers_average(demo_with_data):
+./tests/test_sql_engine.py:104:def test_demo_mode_schema_selection_picks_energy(demo_with_data):
+./tests/test_sql_engine.py:114:def test_demo_mode_honors_cache_disabled(demo_with_data):

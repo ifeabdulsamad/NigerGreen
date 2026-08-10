@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m pytest tests/test_sql_engine.py -v)",
+      "Bash(pip install *)",
+      "Bash(where python3 *)",
+      "Read(//c/Users/IFEOLUWA ABDULSAMAD/AppData/Local/Programs/Python/**)",
+      "Bash(\"C:/Users/IFEOLUWA ABDULSAMAD/AppData/Local/Programs/Python/Python313/python.exe\" -m pytest tests/test_sql_engine.py -v)",
+      "Bash(curl -s http://localhost:8510)",
+      "Bash(\"C:/Users/IFEOLUWA ABDULSAMAD/AppData/Local/Programs/Python/Python313/python.exe\" -m streamlit run app.py --server.port 8512 --server.headless true)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8512)"
+    ]
+  }
+}

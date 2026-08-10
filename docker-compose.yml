@@ -1,0 +1,24 @@
+# NaijaGreen Chat — optional Compose stack (TRD §11.2).
+# The Redis service is NOT wired into the app: caching is in-memory by
+# design (TRD §9.2 "All caches ... stay local"). Enable it only if you
+# later add a Redis-backed cache backend.
+#
+# Usage:
+#   docker compose up --build          # app only
+#   docker compose --profile redis up  # app + redis
+services:
+  app:
+    build: .
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./naijagreen.db:/app/naijagreen.db
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    profile: ["redis"]
+    restart: unless-stopped
